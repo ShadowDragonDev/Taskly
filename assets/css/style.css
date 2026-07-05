@@ -1,0 +1,125 @@
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter.ttf");
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-success: hsl(161 84% 39%);
+  --color-error: hsl(0 84% 60%);
+  --color-warning: hsl(38 92% 50%);
+  --color-information: hsl(217 91% 60%);
+
+  --color-background: hsl(215 15% 94%);
+  --color-background-lighter: hsl(215 15% 97%);
+  --color-background-darker: hsl(215 15% 91%);
+
+  --color-text: hsl(215 15% 15%);
+  --color-text-muted: hsl(215 15% 45%);
+
+  --color-border: hsl(215 15% 83%);
+  --color-border-lighter: hsl(215 15% 90%);
+  --color-border-darker: hsl(215 15% 70%);
+
+  --color-shadow: hsl(215 15% 15% / 0.08);
+}
+
+:root[data-theme="dark"] {
+  --color-success: hsl(161 84% 45%);
+  --color-error: hsl(0 84% 65%);
+  --color-warning: hsl(38 92% 55%);
+  --color-information: hsl(217 91% 65%);
+
+  --color-background: hsl(215 15% 10%);
+  --color-background-lighter: hsl(215 15% 14%);
+  --color-background-darker: hsl(215 15% 6%);
+
+  --color-text: hsl(215 15% 90%);
+  --color-text-muted: hsl(215 15% 60%);
+
+  --color-border: hsl(215 15% 20%);
+  --color-border-lighter: hsl(215 15% 15%);
+  --color-border-darker: hsl(215 15% 30%);
+
+  --color-shadow: hsl(0 0% 0% / 0.4);
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  line-height: 1.5;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.25rem);
+}
+
+h1 {
+  line-height: 1.1;
+  text-wrap: balance;
+  font-size: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+  font-weight: 800;
+}
+
+h2 {
+  line-height: 1.2;
+  font-size: clamp(1.5rem, 1.25rem + 1.25vw, 2.25rem);
+  font-weight: 700;
+}
+
+h3 {
+  line-height: 1.3;
+  font-size: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  font-weight: 600;
+}
+
+small {
+  font-size: clamp(0.8rem, 0.75rem + 0.25vw, 0.875rem);
+}
+
+input,
+button,
+textarea,
+select {
+  color: inherit;
+  font: inherit;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip: rect(0, 0, 0, 0);
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  pointer-events: none;
+}
