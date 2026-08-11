@@ -123,3 +123,108 @@ a {
   height: 1.5rem;
   pointer-events: none;
 }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+}
+
+.header__button {
+  padding: 0.5rem;
+  background-color: var(--color-background);
+  border: none;
+  border-radius: 999999999px;
+  cursor: pointer;
+  transition:
+    background-color 150ms,
+    transform 150ms;
+}
+
+.header__button:hover {
+  background-color: var(--color-background-lighter);
+}
+
+.header__button:active {
+  background-color: hsl(from var(--color-background-lighter) h s calc(l - 2));
+  transform: scale(0.95);
+}
+
+.main {
+  padding: 1rem 2rem;
+}
+
+.view {
+  margin-inline: auto;
+  max-width: 600px;
+}
+
+.view__header {
+  display: grid;
+  grid-template-columns: 1fr repeat(2, auto);
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.view__title {
+  margin-right: 2rem;
+}
+
+.view__button {
+  padding: 0.5rem;
+  background-color: var(--color-background);
+  border: none;
+  border-radius: 999999999px;
+  cursor: pointer;
+  transition:
+    background-color 150ms,
+    transform 150ms;
+}
+
+.view__button:hover {
+  background-color: var(--color-background-lighter);
+}
+
+.view__button:active {
+  background-color: hsl(from var(--color-background-lighter) h s calc(l - 2));
+  transform: scale(0.95);
+}
+
+.tasks-list {
+  display: grid;
+  grid-template-columns: auto 1fr repeat(3, auto);
+  column-gap: 1rem;
+  list-style: none;
+}
+
+.create-task-button {
+  position: fixed;
+  bottom: 3rem;
+  right: 3rem;
+  padding: 1.5rem;
+  background-color: var(--color-information);
+  color: hsl(215 15% 90%);
+  border: none;
+  border-radius: 999999999px;
+  stroke: hsl(215 15% 90%);
+  stroke-width: 1px;
+  cursor: pointer;
+  transition:
+    background-color 150ms,
+    transform 150ms;
+}
+
+.create-task-button:hover {
+  background-color: hsl(from var(--color-information) h s calc(l + 4));
+}
+
+.create-task-button:active {
+  background-color: hsl(from var(--color-information) h s calc(l + 2));
+  transform: scale(0.95);
+}
+
+.create-task-button:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
