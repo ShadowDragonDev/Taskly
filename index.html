@@ -81,6 +81,67 @@
 
         <ul id="tasks-list" class="tasks-list"></ul>
 
+        <form data-task-id="" id="task-saver" class="task-saver">
+          <label for="task-saver-title" class="sr-only">Title</label>
+          <input
+            type="text"
+            name="title"
+            id="task-saver-title"
+            class="task-saver__title"
+            placeholder="Enter task title here..."
+            required
+            pattern=".*\S.*"
+          />
+
+          <label for="task-saver-description" class="sr-only">
+            Description
+          </label>
+          <textarea
+            name="description"
+            id="task-saver-description"
+            class="task-saver__description"
+            placeholder="Description..."
+          ></textarea>
+
+          <div class="task-saver__metadata">
+            <label for="task-saver-due-date" class="sr-only">Due Date</label>
+            <input
+              type="date"
+              name="due-date"
+              id="task-saver-due-date"
+              class="task-saver__due-date"
+            />
+
+            <label for="task-saver-priority" class="sr-only">Priority</label>
+            <select
+              name="priority"
+              id="task-saver-priority"
+              class="task-saver__priority"
+            >
+              <option value="low" selected>Low</option>
+              <option value="moderate">Moderate</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+
+          <div class="task-saver__actions">
+            <button
+              type="button"
+              id="task-saver-reject-button"
+              class="task-saver__reject-button"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              id="task-saver-accept-button"
+              class="task-saver__accept-button"
+            >
+              Save
+            </button>
+          </div>
+        </form>
 
         <button
           aria-label="Add task"
@@ -148,5 +209,67 @@
         Delete
       </button>
     </div>
+
+    <dialog data-task-id="" id="task-viewer" class="task-viewer">
+      <header class="task-viewer__header">
+        <p class="task-viewer__heading">Task Viewer</p>
+        <button
+          aria-label="Close task viewer"
+          id="task-viewer-close-button"
+          class="task-viewer__close-button"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            class="icon"
+          >
+            <!-- Icon from Material Symbols by Google - https://github.com/google/material-design-icons/blob/master/LICENSE -->
+            <path
+              fill="currentColor"
+              d="m12 13.4l-4.9 4.9q-.275.275-.7.275t-.7-.275t-.275-.7t.275-.7l4.9-4.9l-4.9-4.9q-.275-.275-.275-.7t.275-.7t.7-.275t.7.275l4.9 4.9l4.9-4.9q.275-.275.7-.275t.7.275t.275.7t-.275.7L13.4 12l4.9 4.9q.275.275.275.7t-.275.7t-.7.275t-.7-.275z"
+            />
+          </svg>
+        </button>
+      </header>
+
+      <div class="task-viewer__viewport">
+        <h2 id="task-viewer-title" class="task-viewer__title">Title</h2>
+        <p id="task-viewer-description" class="task-viewer__description">
+          Description
+        </p>
+      </div>
+
+      <div class="task-viewer__metadata">
+        <p class="task-viewer__due-date">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            class="icon"
+          >
+            <!-- Icon from Material Symbols by Google - https://github.com/google/material-design-icons/blob/master/LICENSE -->
+            <path
+              fill="currentColor"
+              d="M5 22q-.825 0-1.412-.587T3 20V6q0-.825.588-1.412T5 4h1V3q0-.425.288-.712T7 2t.713.288T8 3v1h8V3q0-.425.288-.712T17 2t.713.288T18 3v1h1q.825 0 1.413.588T21 6v4.675q0 .425-.288.713t-.712.287t-.712-.288t-.288-.712V10H5v10h5.8q.425 0 .713.288T11.8 21t-.288.713T10.8 22zm13 1q-2.075 0-3.537-1.463T13 18t1.463-3.537T18 13t3.538 1.463T23 18t-1.463 3.538T18 23m.5-5.2v-2.3q0-.2-.15-.35T18 15t-.35.15t-.15.35v2.275q0 .2.075.388t.225.337l1.525 1.525q.15.15.35.15t.35-.15t.15-.35t-.15-.35z"
+            />
+          </svg>
+          <span id="task-viewer-due-date">DD/MM/YYYY</span>
+        </p>
+
+        <p class="task-viewer__priority">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            class="icon"
+          >
+            <!-- Icon from Material Symbols by Google - https://github.com/google/material-design-icons/blob/master/LICENSE -->
+            <path
+              fill="currentColor"
+              d="M7 14v6q0 .425-.288.713T6 21t-.712-.288T5 20V5q0-.425.288-.712T6 4h7.175q.35 0 .625.225t.35.575L14.4 6H19q.425 0 .713.288T20 7v8q0 .425-.288.713T19 16h-5.175q-.35 0-.625-.225t-.35-.575L12.6 14z"
+            />
+          </svg>
+          <span id="task-viewer-priority">Priority</span>
+        </p>
+      </div>
+    </dialog>
   </body>
 </html>
