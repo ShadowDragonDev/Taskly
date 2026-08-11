@@ -228,3 +228,153 @@ a {
   pointer-events: none;
 }
 
+.task {
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: center;
+  grid-column: 1 / -1;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.task__status-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.task__status-wrapper::after {
+  content: "";
+  position: absolute;
+  width: 0.5rem;
+  height: 1rem;
+  border: solid transparent;
+  border-width: 0 0.25rem 0.25rem 0;
+  pointer-events: none;
+  transition:
+    border-color 150ms,
+    transform 150ms;
+}
+
+.task__status-wrapper:has(.task__status:checked)::after {
+  border-color: hsl(215 15% 90%);
+  transform: rotateZ(45deg);
+}
+
+.task__status {
+  appearance: none;
+  width: 2rem;
+  height: 2rem;
+  background-color: var(--color-background);
+  border: 2px solid var(--color-border);
+  border-radius: 999999999px;
+  cursor: pointer;
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    transform 150ms;
+}
+
+.task__status:hover {
+  background-color: var(--color-background-lighter);
+}
+
+.task__status:active {
+  background-color: hsl(from var(--color-background-lighter) h s calc(l - 2));
+  transform: scale(0.95);
+}
+
+.task__status:checked {
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.task__title {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.task__due-date--muted {
+  color: var(--color-text-muted);
+}
+
+.task__priority--low {
+  color: var(--color-success);
+}
+
+.task__priority--moderate {
+  color: var(--color-warning);
+}
+
+.task__priority--high {
+  color: var(--color-error);
+}
+
+.task__button {
+  padding: 0.5rem;
+  background-color: var(--color-background);
+  border: none;
+  border-radius: 999999999px;
+  cursor: pointer;
+  transition:
+    background-color 150ms,
+    transform 150ms;
+}
+
+.task__button:hover {
+  background-color: var(--color-background-lighter);
+}
+
+.task__button:active {
+  background-color: hsl(from var(--color-background-lighter) h s calc(l - 2));
+  transform: scale(0.95);
+}
+
+.task-actions-menu:popover-open {
+  position: fixed;
+  position-anchor: auto;
+  inset: unset;
+  top: anchor(bottom);
+  right: anchor(right);
+  display: grid;
+  grid-template-rows: repeat(3, auto);
+  grid-template-columns: auto 1fr;
+  margin-top: 0.5rem;
+  padding: 0.25rem;
+  background-color: var(--color-background-lighter);
+  color: var(--color-text);
+  border: 2px solid var(--color-border);
+  border-radius: 0.75rem;
+  font-size: clamp(0.85rem, 0.8rem + 0.25vw, 1rem)
+}
+
+.task-actions-menu__button {
+  display: grid;
+  grid-template-columns: subgrid;
+  gap: 0.5rem;
+  place-items: center start;
+  grid-column: 1 / -1;
+  padding: 0.25rem 0.5rem;
+  background-color: var(--color-background-lighter);
+  color: var(--color-text);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 150ms, transform 150ms;
+}
+
+.task-actions-menu__button:hover {
+  background-color: hsl(from var(--color-background-lighter) h s calc(l + 4));
+}
+
+.task-actions-menu__button:active {
+  background-color: hsl(from var(--color-background-lighter) h s calc(l + 2));
+  transform: scale(0.95);
+}
+
+#delete-task-button {
+  color: var(--color-error);
+}
+
