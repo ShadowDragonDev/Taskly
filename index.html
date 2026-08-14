@@ -163,6 +163,67 @@
       </div>
     </main>
 
+    <form popover="auto" id="task-refiner" class="task-refiner">
+      <div
+        role="group"
+        aria-labelledby="task-refiner-sort-legend"
+        class="task-refiner__fieldset"
+      >
+        <legend id="task-refiner-sort-legend" class="task-refiner__legend">
+          Sort
+        </legend>
+
+        <label for="task-refiner-sort-type" class="task-refiner__label">
+          Sort Type
+        </label>
+        <select
+          name="sort-type"
+          id="task-refiner-sort-type"
+          class="task-refiner__input"
+        >
+          <option value="due-date" selected>Due Date</option>
+          <option value="priority">Priority</option>
+          <option value="create-date">Date Created</option>
+          <option value="title">Title</option>
+        </select>
+
+        <label for="task-refiner-sort-order" class="task-refiner__label">
+          Sort Order
+        </label>
+        <select
+          name="sort-order"
+          id="task-refiner-sort-order"
+          class="task-refiner__input"
+        >
+          <option value="ascending" selected>Ascending</option>
+          <option value="descending">Descending</option>
+        </select>
+      </div>
+
+      <div
+        role="group"
+        aria-labelledby="task-refiner-filter-legend"
+        class="task-refiner__fieldset"
+      >
+        <legend id="task-refiner-filter-legend" class="task-refiner__legend">
+          Filter
+        </legend>
+
+        <label for="task-refiner-filter-status" class="task-refiner__label">
+          Status
+        </label>
+        <select
+          name="filter-status"
+          id="task-refiner-filter-status"
+          class="task-refiner__input"
+        >
+          <option value="both" selected>Both</option>
+          <option value="complete">Complete</option>
+          <option value="incomplete">Incomplete</option>
+        </select>
+      </div>
+    </form>
+
     <div popover="auto" id="task-actions-menu" class="task-actions-menu">
       <button id="read-task-button" class="task-actions-menu__button">
         <svg

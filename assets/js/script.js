@@ -12,6 +12,19 @@ const taskViewer = document.querySelector("#task-viewer");
 const taskViewerCloseButton = document.querySelector(
   "#task-viewer-close-button",
 );
+const taskRefinerButton = document.querySelector("#task-refiner-button");
+const taskRefiner = document.querySelector("#task-refiner");
+
+const STATUS_WEIGHTS = {
+  complete: 2,
+  incomplete: 1,
+};
+
+const PRIORITY_WEIGHTS = {
+  high: 3,
+  moderate: 2,
+  low: 1,
+};
 
 const tasks = [];
 let activeTaskID = "";
@@ -32,7 +45,7 @@ class Task {
     try {
       this.dueDate = Temporal.PlainDate.from(dueDate);
     } catch {
-      this.dueDate = "";
+      this.dueDate = null;
     }
 
     this.priority = priority;
@@ -44,7 +57,7 @@ class Task {
 
   getFormattedDueDate() {
     return (
-      this.dueDate.toLocaleString("en-GB", {
+      this.dueDate?.toLocaleString("en-GB", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
@@ -59,8 +72,9 @@ class Task {
 
 async function renderTasks() {
   const fragment = new DocumentFragment();
+  const refinedTasks = getRefinedTasks();
 
-  for (const taskObject of tasks) {
+  for (const taskObject of refinedTasks) {
     const task = (await getHTMLTemplate("task")).querySelector(".task");
     const taskStatus = task.querySelector(".task__status");
     const taskTitle = task.querySelector(".task__title");
@@ -106,11 +120,108 @@ async function getHTMLTemplate(templateName) {
   }
 }
 
+function getRefinedTasks() {
+  let refinedTasks = [...tasks];
+  const taskRefinerData = new FormData(taskRefiner);
+
+  const filter = {
+    status: taskRefinerData.get("filter-status"),
+  };
+
+  const sort = {
+    type: taskRefinerData.get("sort-type"),
+    order: taskRefinerData.get("sort-order"),
+  };
+
+  if (filter.status !== "both") {
+    refinedTasks = refinedTasks.filter(
+      (taskObject) => taskObject.status === filter.status,
+    );
+  }
+
+  if (sort.type === "due-date") {
+    refinedTasks.sort(
+      composeSort(sortStatus, sortDueDate, sortPriority, sortTitle),
+    );
+  }
+
+  if (sort.type === "priority") {
+    refinedTasks.sort(
+      composeSort(sortStatus, sortPriority, sortDueDate, sortTitle),
+    );
+  }
+
+  if (sort.type === "create-date") {
+    refinedTasks.sort(
+      composeSort(sortStatus, sortCreateDate, sortPriority, sortTitle),
+    );
+  }
+
+  if (sort.type === "title") {
+    refinedTasks.sort(
+      composeSort(sortStatus, sortTitle, sortDueDate, sortPriority),
+    );
+  }
+
+  return sort.order === "descending" ? refinedTasks.reverse() : refinedTasks;
+}
+
+function composeSort(...sortFunctions) {
+  return (a, b) => {
+    for (const sortFunction of sortFunctions) {
+      const result = sortFunction(a, b);
+
+      if (result !== 0) {
+        return result;
+      }
+    }
+
+    return 0;
+  };
+}
+
+function sortStatus(a, b) {
+  const statusWeightA = STATUS_WEIGHTS[a.status];
+  const statusWeightB = STATUS_WEIGHTS[b.status];
+  return statusWeightA - statusWeightB;
+}
+
+function sortTitle(a, b) {
+  return a.title.localeCompare(b.title);
+}
+
+function sortCreateDate(a, b) {
+  return Temporal.Instant.compare(a.createDate, b.createDate);
+}
+
+function sortDueDate(a, b) {
+  if (a.dueDate !== b.dueDate) {
+    if (!a.dueDate) {
+      return 1;
+    }
+
+    if (!b.dueDate) {
+      return -1;
+    }
+
+    return Temporal.PlainDate.compare(a.dueDate, b.dueDate);
+  }
+
+  return 0;
+}
+
+function sortPriority(a, b) {
+  const priorityWeightA = PRIORITY_WEIGHTS[a.priority];
+  const priorityWeightB = PRIORITY_WEIGHTS[b.priority];
+  return priorityWeightB - priorityWeightA;
+}
+
 function openTaskSaver(taskID = "") {
   taskSaver.reset();
   taskSaver.dataset.taskId = taskID;
   taskSaverAcceptButton.disabled = true;
   createTaskButton.disabled = true;
+  taskRefinerButton.disabled = true;
 
   if (taskID) {
     const taskObject = tasks.find((taskObject) => taskObject.id === taskID);
@@ -140,6 +251,7 @@ function closeTaskSaver() {
   taskSaver.reset();
   taskSaver.classList.remove("task-saver--open");
   createTaskButton.disabled = false;
+  taskRefinerButton.disabled = false;
   renderTasks();
 }
 
@@ -262,4 +374,8 @@ taskActionsMenu.addEventListener("click", ({ target }) => {
 
 taskViewerCloseButton.addEventListener("click", () => {
   closeTaskViewer();
+});
+
+taskRefiner.addEventListener("change", () => {
+  renderTasks();
 });
