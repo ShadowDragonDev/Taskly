@@ -336,6 +336,7 @@ taskSaver.addEventListener("submit", (event) => {
     );
 
     taskObject.status = previousTaskObject.status;
+    taskObject.createDate = previousTaskObject.createDate;
     Object.assign(previousTaskObject, taskObject);
     closeTaskSaver();
   } else {
