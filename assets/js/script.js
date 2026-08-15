@@ -26,6 +26,10 @@ const PRIORITY_WEIGHTS = {
   low: 1,
 };
 
+const delay = (milliseconds) => {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
+
 const tasks = [];
 let activeTaskID = "";
 
@@ -330,6 +334,8 @@ taskSaver.addEventListener("submit", (event) => {
     const previousTaskObject = tasks.find(
       (taskObject) => taskObject.id === taskID,
     );
+
+    taskObject.status = previousTaskObject.status;
     Object.assign(previousTaskObject, taskObject);
     closeTaskSaver();
   } else {
@@ -377,5 +383,18 @@ taskViewerCloseButton.addEventListener("click", () => {
 });
 
 taskRefiner.addEventListener("change", () => {
+  renderTasks();
+});
+
+tasksList.addEventListener("click", async ({ target }) => {
+  if (!target.classList.contains("task__status")) {
+    return;
+  }
+
+  const taskID = target.closest(".task").id;
+  const taskObject = tasks.find((taskObject) => taskObject.id === taskID);
+  taskObject.status = target.checked ? "complete" : "incomplete";
+
+  await delay(150);
   renderTasks();
 });
