@@ -96,7 +96,7 @@ async function renderTasks() {
     taskStatus.id = `task-status-${taskObject.id}`;
     taskTitle.htmlFor = `task-status-${taskObject.id}`;
 
-    const search = new FormData(searchbar).get("search").toLowerCase().trim();
+    const search = getSearchData();
 
     if (search !== "") {
       const regex = new RegExp(`(${search})`, "i");
@@ -147,18 +147,7 @@ async function getHTMLTemplate(templateName) {
 
 function getRefinedTasks() {
   let refinedTasks = [...tasks];
-  const taskRefinerData = new FormData(taskRefiner);
-  const searchbarData = new FormData(searchbar);
-
-  const filter = {
-    status: taskRefinerData.get("filter-status"),
-    title: searchbarData.get("search").toLowerCase().trim(),
-  };
-
-  const sort = {
-    type: taskRefinerData.get("sort-type"),
-    order: taskRefinerData.get("sort-order"),
-  };
+  const { filter, sort } = getRefinerData();
 
   if (filter.status !== "both") {
     refinedTasks = refinedTasks.filter(
@@ -166,11 +155,10 @@ function getRefinedTasks() {
     );
   }
 
-  if (filter.title !== "") {
+  if (filter.title) {
     refinedTasks = refinedTasks.filter((taskObject) => {
       const search = filter.title;
-      const taskObjectTitle = taskObject.title.toLowerCase().trim();
-      return taskObjectTitle.includes(search);
+      return taskObject.title.toLowerCase().trim().includes(search);
     });
   }
 
@@ -199,6 +187,27 @@ function getRefinedTasks() {
   }
 
   return sort.order === "descending" ? refinedTasks.reverse() : refinedTasks;
+}
+
+function getRefinerData() {
+  const taskRefinerData = new FormData(taskRefiner);
+
+  const filter = {
+    status: taskRefinerData.get("filter-status"),
+    title: getSearchData(),
+  };
+
+  const sort = {
+    type: taskRefinerData.get("sort-type"),
+    order: taskRefinerData.get("sort-order"),
+  };
+
+  return { filter, sort };
+}
+
+function getSearchData() {
+  const searchbarData = new FormData(searchbar);
+  return searchbarData.get("search").toLowerCase().trim();
 }
 
 function composeSort(...sortFunctions) {
