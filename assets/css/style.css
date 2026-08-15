@@ -189,6 +189,11 @@ mark {
   border-radius: 999999999px;
 }
 
+.searchbar:has(.searchbar__searchbox:read-only) {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .searchbar__icon {
   flex: 0 0 auto;
 }

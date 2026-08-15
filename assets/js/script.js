@@ -13,6 +13,7 @@ const taskViewerCloseButton = document.querySelector(
   "#task-viewer-close-button",
 );
 const searchbar = document.querySelector("#searchbar");
+const searchbox = document.querySelector("#searchbox");
 const taskRefinerButton = document.querySelector("#task-refiner-button");
 const taskRefiner = document.querySelector("#task-refiner");
 
@@ -256,6 +257,7 @@ function openTaskSaver(taskID = "") {
   taskSaverAcceptButton.disabled = true;
   createTaskButton.disabled = true;
   taskRefinerButton.disabled = true;
+  searchbox.readOnly = true;
 
   if (taskID) {
     const taskObject = tasks.find((taskObject) => taskObject.id === taskID);
@@ -286,6 +288,7 @@ function closeTaskSaver() {
   taskSaver.classList.remove("task-saver--open");
   createTaskButton.disabled = false;
   taskRefinerButton.disabled = false;
+  searchbox.readOnly = false;
   renderTasks();
 }
 
