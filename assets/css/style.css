@@ -106,6 +106,12 @@ a {
   text-decoration: none;
 }
 
+mark {
+  background-color: var(--color-warning);
+  color: hsl(215 15% 15%);
+  border-radius: 0.125rem;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -162,12 +168,41 @@ a {
 .view__header {
   display: grid;
   grid-template-columns: 1fr repeat(2, auto);
+  gap: 0.5rem;
   align-items: center;
   margin-bottom: 2rem;
 }
 
 .view__title {
-  margin-right: 2rem;
+  margin-right: 1.5rem;
+}
+
+.searchbar {
+  display: flex;
+  column-gap: 0.5rem;
+  align-items: center;
+  min-width: 0;
+  max-width: 400px;
+  padding: 0.25rem 0.75rem;
+  background-color: var(--color-background-lighter);
+  border: 2px solid var(--color-border);
+  border-radius: 999999999px;
+}
+
+.searchbar__icon {
+  flex: 0 0 auto;
+}
+
+.searchbar__searchbox {
+  flex: 1;
+  min-width: 0;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.searchbar__searchbox::placeholder {
+  color: var(--color-text-muted);
 }
 
 .view__button {
@@ -642,7 +677,17 @@ a {
   border-radius: 0.5rem;
 }
 
+@media(width <=375px) {
+  .main {
+    padding: 1rem 1.5rem;
+  }
+}
+
 @media (width <=425px) {
+  .view__header:has(.searchbar__searchbox:focus) .view__title {
+    display: none;
+  }
+
   .task-saver__metadata {
     flex-direction: column;
   }

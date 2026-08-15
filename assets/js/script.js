@@ -12,6 +12,7 @@ const taskViewer = document.querySelector("#task-viewer");
 const taskViewerCloseButton = document.querySelector(
   "#task-viewer-close-button",
 );
+const searchbar = document.querySelector("#searchbar");
 const taskRefinerButton = document.querySelector("#task-refiner-button");
 const taskRefiner = document.querySelector("#task-refiner");
 
@@ -94,6 +95,25 @@ async function renderTasks() {
     taskStatus.id = `task-status-${taskObject.id}`;
     taskTitle.htmlFor = `task-status-${taskObject.id}`;
 
+    const search = new FormData(searchbar).get("search").toLowerCase().trim();
+
+    if (search !== "") {
+      const regex = new RegExp(`(${search})`, "i");
+      const textFragments = taskObject.title.split(regex);
+      taskTitle.replaceChildren();
+
+      for (const textFragment of textFragments.filter(Boolean)) {
+        if (textFragment === search) {
+          const markElement = document.createElement("mark");
+          markElement.textContent = textFragment;
+          taskTitle.append(markElement);
+        } else {
+          const textNode = document.createTextNode(textFragment);
+          taskTitle.append(textNode);
+        }
+      }
+    }
+
     if (!taskObject.dueDate) {
       taskDueDate.classList.add("task__due-date--muted");
     }
@@ -127,9 +147,11 @@ async function getHTMLTemplate(templateName) {
 function getRefinedTasks() {
   let refinedTasks = [...tasks];
   const taskRefinerData = new FormData(taskRefiner);
+  const searchbarData = new FormData(searchbar);
 
   const filter = {
     status: taskRefinerData.get("filter-status"),
+    title: searchbarData.get("search").toLowerCase().trim(),
   };
 
   const sort = {
@@ -141,6 +163,14 @@ function getRefinedTasks() {
     refinedTasks = refinedTasks.filter(
       (taskObject) => taskObject.status === filter.status,
     );
+  }
+
+  if (filter.title !== "") {
+    refinedTasks = refinedTasks.filter((taskObject) => {
+      const search = filter.title;
+      const taskObjectTitle = taskObject.title.toLowerCase().trim();
+      return taskObjectTitle.includes(search);
+    });
   }
 
   if (sort.type === "due-date") {
@@ -398,4 +428,14 @@ tasksList.addEventListener("click", async ({ target }) => {
 
   await delay(150);
   renderTasks();
+});
+
+searchbar.addEventListener("input", ({ target }) => {
+  if (target.id === "searchbox") {
+    renderTasks();
+  }
+});
+
+searchbar.addEventListener("submit", (event) => {
+  event.preventDefault();
 });
