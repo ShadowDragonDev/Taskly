@@ -115,7 +115,16 @@ async function renderTasks() {
       }
     }
 
-    if (!taskObject.dueDate) {
+    if (taskObject.dueDate) {
+      const today = Temporal.Now.plainDateISO();
+      const comparison = Temporal.PlainDate.compare(taskObject.dueDate, today);
+
+      if (comparison === 0) {
+        taskDueDate.classList.add("task__due-date--today");
+      } else if (comparison < 0) {
+        taskDueDate.classList.add("task__due-date--overdue");
+      }
+    } else {
       taskDueDate.classList.add("task__due-date--muted");
     }
 
@@ -334,7 +343,16 @@ function openTaskViewer(taskID = "") {
     taskViewerDescription.classList.add("task-viewer__description--muted");
   }
 
-  if (!taskObject.dueDate) {
+  if (taskObject.dueDate) {
+    const today = Temporal.Now.plainDateISO();
+    const comparison = Temporal.PlainDate.compare(taskObject.dueDate, today);
+
+    if (comparison === 0) {
+      taskViewerDueDateWrapper.classList.add("task-viewer__due-date--today");
+    } else if (comparison < 0) {
+      taskViewerDueDateWrapper.classList.add("task-viewer__due-date--overdue");
+    }
+  } else {
     taskViewerDueDateWrapper.classList.add("task-viewer__due-date--muted");
   }
 

@@ -345,6 +345,14 @@ mark {
   color: var(--color-text-muted);
 }
 
+.task__due-date--today {
+  color: var(--color-warning);
+}
+
+.task__due-date--overdue {
+  color: var(--color-error);
+}
+
 .task__priority--low {
   color: var(--color-success);
 }
@@ -540,9 +548,9 @@ mark {
 .task-viewer[open] {
   display: grid;
   grid-template-rows: 3.25rem 1fr 3.25rem;
-  width: 80%;
+  width: 90%;
   max-width: 65ch;
-  height: 80%;
+  height: 85%;
   margin: auto;
   background-color: var(--color-background);
   color: var(--color-text);
@@ -632,6 +640,14 @@ mark {
   color: var(--color-text-muted);
 }
 
+.task-viewer__due-date--today {
+  color: var(--color-warning);
+}
+
+.task-viewer__due-date--overdue {
+  color: var(--color-error);
+}
+
 .task-viewer__priority--low {
   color: var(--color-success);
 }
@@ -695,5 +711,23 @@ mark {
 
   .task-saver__metadata {
     flex-direction: column;
+  }
+
+  .task-viewer[open] {
+    width: 100%;
+    max-width: unset;
+    height: 100%;
+    max-height: unset;
+    border: none;
+    border-radius: 0;
+  }
+
+  .tasks-list {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .task__due-date,
+  .task__priority {
+    display: none;
   }
 }
