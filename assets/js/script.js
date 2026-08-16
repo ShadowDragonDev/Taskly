@@ -313,32 +313,34 @@ function openTaskViewer(taskID = "") {
     "#task-viewer-description",
   );
   const taskViewerDueDate = taskViewer.querySelector("#task-viewer-due-date");
+  const taskViewerDueDateWrapper = taskViewer.querySelector(
+    ".task-viewer__due-date",
+  );
   const taskViewerPriority = taskViewer.querySelector("#task-viewer-priority");
+  const taskViewerPriorityWrapper = taskViewer.querySelector(
+    ".task-viewer__priority",
+  );
 
   taskViewerTitle.textContent = taskObject.title;
   taskViewerDescription.textContent = taskObject.getFormattedDescription();
   taskViewerDueDate.textContent = taskObject.getFormattedDueDate();
   taskViewerPriority.textContent = taskObject.getFormattedPriority();
 
-  if (taskObject.description) {
-    taskViewerDescription.classList.remove("task-viewer__description--muted");
-  } else {
+  taskViewerDescription.className = "task-viewer__description";
+  taskViewerDueDateWrapper.className = "task-viewer__due-date";
+  taskViewerPriorityWrapper.className = "task-viewer__priority";
+
+  if (!taskObject.description) {
     taskViewerDescription.classList.add("task-viewer__description--muted");
   }
 
-  if (taskObject.dueDate) {
-    taskViewer
-      .querySelector(".task-viewer__due-date")
-      .classList.remove("task-viewer__due-date--muted");
-  } else {
-    taskViewer
-      .querySelector(".task-viewer__due-date")
-      .classList.add("task-viewer__due-date--muted");
+  if (!taskObject.dueDate) {
+    taskViewerDueDateWrapper.classList.add("task-viewer__due-date--muted");
   }
 
-  taskViewer
-    .querySelector(".task-viewer__priority")
-    .classList.add(`task-viewer__priority--${taskObject.priority}`);
+  taskViewerPriorityWrapper.classList.add(
+    `task-viewer__priority--${taskObject.priority}`,
+  );
 
   taskViewer.showModal();
 }
