@@ -130,13 +130,14 @@ mark {
   pointer-events: none;
 }
 
-.header {
+.site-header {
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
+  padding: 1rem;
 }
 
-.header__button {
+.site-header__sidebar-button,
+.site-header__notifications-button {
   padding: 0.5rem;
   background-color: var(--color-background);
   border: none;
@@ -147,25 +148,25 @@ mark {
     transform 150ms;
 }
 
-.header__button:hover {
+:where(.site-header__sidebar-button, .site-header__notifications-button):hover {
   background-color: var(--color-background-lighter);
 }
 
-.header__button:active {
+:where(.site-header__sidebar-button, .site-header__notifications-button):active {
   background-color: hsl(from var(--color-background-lighter) h s calc(l - 2));
   transform: scale(0.95);
 }
 
-.main {
+.viewport {
   padding: 1rem 2rem;
 }
 
-.view {
+.viewport__container {
   margin-inline: auto;
   max-width: 600px;
 }
 
-.view__header {
+.viewport__header {
   display: grid;
   grid-template-columns: 1fr repeat(2, auto);
   gap: 0.5rem;
@@ -173,7 +174,7 @@ mark {
   margin-bottom: 2rem;
 }
 
-.view__title {
+.viewport__heading {
   margin-right: 1.5rem;
 }
 
@@ -210,7 +211,7 @@ mark {
   color: var(--color-text-muted);
 }
 
-.view__button {
+.viewport__button {
   padding: 0.5rem;
   background-color: var(--color-background);
   border: none;
@@ -221,21 +222,21 @@ mark {
     transform 150ms;
 }
 
-.view__button:hover {
+.viewport__button:hover {
   background-color: var(--color-background-lighter);
 }
 
-.view__button:active {
+.viewport__button:active {
   background-color: hsl(from var(--color-background-lighter) h s calc(l - 2));
   transform: scale(0.95);
 }
 
-#task-refiner-button:disabled {
+.viewport__button:disabled {
   opacity: 0.5;
   pointer-events: none;
 }
 
-.tasks-list {
+.viewport__tasks-list {
   display: grid;
   grid-template-columns: auto 1fr repeat(3, auto);
   column-gap: 1rem;
@@ -385,52 +386,6 @@ mark {
   transform: scale(0.95);
 }
 
-.task-actions-menu:popover-open {
-  position: fixed;
-  position-anchor: auto;
-  inset: unset;
-  top: anchor(bottom);
-  right: anchor(right);
-  display: grid;
-  grid-template-rows: repeat(3, auto);
-  grid-template-columns: auto 1fr;
-  margin-top: 0.5rem;
-  padding: 0.25rem;
-  background-color: var(--color-background-lighter);
-  color: var(--color-text);
-  border: 2px solid var(--color-border);
-  border-radius: 0.75rem;
-  font-size: clamp(0.85rem, 0.8rem + 0.25vw, 1rem)
-}
-
-.task-actions-menu__button {
-  display: grid;
-  grid-template-columns: subgrid;
-  gap: 0.5rem;
-  place-items: center start;
-  grid-column: 1 / -1;
-  padding: 0.25rem 0.5rem;
-  background-color: var(--color-background-lighter);
-  color: var(--color-text);
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background-color 150ms, transform 150ms;
-}
-
-.task-actions-menu__button:hover {
-  background-color: hsl(from var(--color-background-lighter) h s calc(l + 4));
-}
-
-.task-actions-menu__button:active {
-  background-color: hsl(from var(--color-background-lighter) h s calc(l + 2));
-  transform: scale(0.95);
-}
-
-#delete-task-button {
-  color: var(--color-error);
-}
-
 .task-saver {
   display: none;
   flex-direction: column;
@@ -493,7 +448,7 @@ mark {
   border-radius: 0.5rem;
 }
 
-.task-saver__actions {
+.task-saver__buttons-container {
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
@@ -559,7 +514,7 @@ mark {
 }
 
 .task-viewer::backdrop {
-  background-color: hsl(215 15% 15% / 0.5);
+  background-color: hsl(0 0 0 / 0.5);
 }
 
 .task-viewer__header {
@@ -657,6 +612,52 @@ mark {
 }
 
 .task-viewer__priority--high {
+  color: var(--color-error);
+}
+
+.task-actions-menu:popover-open {
+  position: fixed;
+  position-anchor: auto;
+  inset: unset;
+  top: anchor(bottom);
+  right: anchor(right);
+  display: grid;
+  grid-template-rows: repeat(3, auto);
+  grid-template-columns: auto 1fr;
+  margin-top: 0.5rem;
+  padding: 0.25rem;
+  background-color: var(--color-background-lighter);
+  color: var(--color-text);
+  border: 2px solid var(--color-border);
+  border-radius: 0.75rem;
+  font-size: clamp(0.85rem, 0.8rem + 0.25vw, 1rem)
+}
+
+.task-actions-menu__button {
+  display: grid;
+  grid-template-columns: subgrid;
+  gap: 0.5rem;
+  place-items: center start;
+  grid-column: 1 / -1;
+  padding: 0.25rem 0.5rem;
+  background-color: var(--color-background-lighter);
+  color: var(--color-text);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 150ms, transform 150ms;
+}
+
+.task-actions-menu__button:hover {
+  background-color: hsl(from var(--color-background-lighter) h s calc(l + 4));
+}
+
+.task-actions-menu__button:active {
+  background-color: hsl(from var(--color-background-lighter) h s calc(l + 2));
+  transform: scale(0.95);
+}
+
+#delete-task-button {
   color: var(--color-error);
 }
 

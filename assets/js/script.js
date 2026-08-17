@@ -1,21 +1,33 @@
-const createTaskButton = document.querySelector("#create-task-button");
-const taskActionsMenu = document.querySelector("#task-actions-menu");
-const tasksList = document.querySelector("#tasks-list");
-const taskSaver = document.querySelector("#task-saver");
-const taskSaverRejectButton = document.querySelector(
-  "#task-saver-reject-button",
+const DOM = {
+  tasksList: document.querySelector("#tasks-list"),
+  createTaskButton: document.querySelector("#create-task-button"),
+  taskActionsMenu: document.querySelector("#task-actions-menu"),
+  taskSaver: document.querySelector("#task-saver"),
+  taskSaverTitle: document.querySelector("#task-saver-title"),
+  taskSaverDescription: document.querySelector("#task-saver-description"),
+  taskSaverDueDate: document.querySelector("#task-saver-due-date"),
+  taskSaverPriority: document.querySelector("#task-saver-priority"),
+  taskSaverRejectButton: document.querySelector("#task-saver-reject-button"),
+  taskSaverAcceptButton: document.querySelector("#task-saver-accept-button"),
+  taskViewer: document.querySelector("#task-viewer"),
+  taskViewerTitle: document.querySelector("#task-viewer-title"),
+  taskViewerDescription: document.querySelector("#task-viewer-description"),
+  taskViewerDueDate: document.querySelector("#task-viewer-due-date"),
+  taskViewerPriority: document.querySelector("#task-viewer-priority"),
+  taskViewerCloseButton: document.querySelector("#task-viewer-close-button"),
+  taskRefiner: document.querySelector("#task-refiner"),
+  taskRefinerButton: document.querySelector("#task-refiner-button"),
+  searchbar: document.querySelector("#searchbar"),
+  searchbox: document.querySelector("#searchbox"),
+};
+
+DOM.taskViewerDueDateWrapper = DOM.taskViewerDueDate.closest(
+  ".task-viewer__due-date",
 );
-const taskSaverAcceptButton = document.querySelector(
-  "#task-saver-accept-button",
+
+DOM.taskViewerPriorityWrapper = DOM.taskViewerPriority.closest(
+  ".task-viewer__priority",
 );
-const taskViewer = document.querySelector("#task-viewer");
-const taskViewerCloseButton = document.querySelector(
-  "#task-viewer-close-button",
-);
-const searchbar = document.querySelector("#searchbar");
-const searchbox = document.querySelector("#searchbox");
-const taskRefinerButton = document.querySelector("#task-refiner-button");
-const taskRefiner = document.querySelector("#task-refiner");
 
 const STATUS_WEIGHTS = {
   complete: 2,
@@ -26,10 +38,6 @@ const PRIORITY_WEIGHTS = {
   high: 3,
   moderate: 2,
   low: 1,
-};
-
-const delay = (milliseconds) => {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
 };
 
 const tasks = [];
@@ -74,6 +82,10 @@ class Task {
   getFormattedPriority() {
     return this.priority[0].toUpperCase() + this.priority.slice(1);
   }
+}
+
+function delay(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
 async function renderTasks() {
@@ -133,8 +145,8 @@ async function renderTasks() {
     fragment.append(task);
   }
 
-  tasksList.replaceChildren();
-  tasksList.append(fragment);
+  DOM.tasksList.replaceChildren();
+  DOM.tasksList.append(fragment);
 }
 
 async function getHTMLTemplate(templateName) {
@@ -199,7 +211,7 @@ function getRefinedTasks() {
 }
 
 function getRefinerData() {
-  const taskRefinerData = new FormData(taskRefiner);
+  const taskRefinerData = new FormData(DOM.taskRefiner);
 
   const filter = {
     status: taskRefinerData.get("filter-status"),
@@ -215,7 +227,7 @@ function getRefinerData() {
 }
 
 function getSearchData() {
-  const searchbarData = new FormData(searchbar);
+  const searchbarData = new FormData(DOM.searchbar);
   return searchbarData.get("search").toLowerCase().trim();
 }
 
@@ -270,12 +282,12 @@ function sortPriority(a, b) {
 }
 
 function openTaskSaver(taskID = "") {
-  taskSaver.reset();
-  taskSaver.dataset.taskId = taskID;
-  taskSaverAcceptButton.disabled = true;
-  createTaskButton.disabled = true;
-  taskRefinerButton.disabled = true;
-  searchbox.readOnly = true;
+  DOM.taskSaver.reset();
+  DOM.taskSaver.dataset.taskId = taskID;
+  DOM.taskSaverAcceptButton.disabled = true;
+  DOM.createTaskButton.disabled = true;
+  DOM.taskRefinerButton.disabled = true;
+  DOM.searchbox.readOnly = true;
 
   if (taskID) {
     const taskObject = tasks.find((taskObject) => taskObject.id === taskID);
@@ -285,62 +297,47 @@ function openTaskSaver(taskID = "") {
       return;
     }
 
-    taskSaver.querySelector("#task-saver-title").value = taskObject.title;
-    taskSaver.querySelector("#task-saver-description").value =
-      taskObject.description;
-    taskSaver.querySelector("#task-saver-due-date").value = taskObject.dueDate;
-    taskSaver.querySelector("#task-saver-priority").value = taskObject.priority;
+    DOM.taskSaverTitle.value = taskObject.title;
+    DOM.taskSaverDescription.value = taskObject.description;
+    DOM.taskSaverDueDate.value = taskObject.dueDate;
+    DOM.taskSaverPriority.value = taskObject.priority;
 
-    document.getElementById(String(taskObject.id)).replaceWith(taskSaver);
-    taskSaverAcceptButton.disabled = false;
+    document.getElementById(String(taskObject.id)).replaceWith(DOM.taskSaver);
+    DOM.taskSaverAcceptButton.disabled = false;
   } else {
-    tasksList.insertAdjacentElement("afterend", taskSaver);
+    DOM.tasksList.insertAdjacentElement("afterend", DOM.taskSaver);
   }
 
-  taskSaver.classList.add("task-saver--open");
-  taskSaver.querySelector("#task-saver-title").focus();
+  DOM.taskSaver.classList.add("task-saver--open");
+  DOM.taskSaver.querySelector("#task-saver-title").focus();
 }
 
 function closeTaskSaver() {
-  taskSaver.reset();
-  taskSaver.classList.remove("task-saver--open");
-  createTaskButton.disabled = false;
-  taskRefinerButton.disabled = false;
-  searchbox.readOnly = false;
+  DOM.taskSaver.classList.remove("task-saver--open");
+  DOM.createTaskButton.disabled = false;
+  DOM.taskRefinerButton.disabled = false;
+  DOM.searchbox.readOnly = false;
   renderTasks();
 }
 
 function openTaskViewer(taskID = "") {
-  taskViewer.dataset.taskId = taskID;
+  DOM.taskViewer.dataset.taskId = taskID;
 
   const taskObject = taskID
     ? tasks.find((taskObject) => taskObject.id === taskID)
     : new Task(undefined, "Title", "", undefined, undefined, "low");
 
-  const taskViewerTitle = taskViewer.querySelector("#task-viewer-title");
-  const taskViewerDescription = taskViewer.querySelector(
-    "#task-viewer-description",
-  );
-  const taskViewerDueDate = taskViewer.querySelector("#task-viewer-due-date");
-  const taskViewerDueDateWrapper = taskViewer.querySelector(
-    ".task-viewer__due-date",
-  );
-  const taskViewerPriority = taskViewer.querySelector("#task-viewer-priority");
-  const taskViewerPriorityWrapper = taskViewer.querySelector(
-    ".task-viewer__priority",
-  );
+  DOM.taskViewerTitle.textContent = taskObject.title;
+  DOM.taskViewerDescription.textContent = taskObject.getFormattedDescription();
+  DOM.taskViewerDueDate.textContent = taskObject.getFormattedDueDate();
+  DOM.taskViewerPriority.textContent = taskObject.getFormattedPriority();
 
-  taskViewerTitle.textContent = taskObject.title;
-  taskViewerDescription.textContent = taskObject.getFormattedDescription();
-  taskViewerDueDate.textContent = taskObject.getFormattedDueDate();
-  taskViewerPriority.textContent = taskObject.getFormattedPriority();
-
-  taskViewerDescription.className = "task-viewer__description";
-  taskViewerDueDateWrapper.className = "task-viewer__due-date";
-  taskViewerPriorityWrapper.className = "task-viewer__priority";
+  DOM.taskViewerDescription.className = "task-viewer__description";
+  DOM.taskViewerDueDateWrapper.className = "task-viewer__due-date";
+  DOM.taskViewerPriorityWrapper.className = "task-viewer__priority";
 
   if (!taskObject.description) {
-    taskViewerDescription.classList.add("task-viewer__description--muted");
+    DOM.taskViewerDescription.classList.add("task-viewer__description--muted");
   }
 
   if (taskObject.dueDate) {
@@ -348,41 +345,45 @@ function openTaskViewer(taskID = "") {
     const comparison = Temporal.PlainDate.compare(taskObject.dueDate, today);
 
     if (comparison === 0) {
-      taskViewerDueDateWrapper.classList.add("task-viewer__due-date--today");
+      DOM.taskViewerDueDateWrapper.classList.add(
+        "task-viewer__due-date--today",
+      );
     } else if (comparison < 0) {
-      taskViewerDueDateWrapper.classList.add("task-viewer__due-date--overdue");
+      DOM.taskViewerDueDateWrapper.classList.add(
+        "task-viewer__due-date--overdue",
+      );
     }
   } else {
-    taskViewerDueDateWrapper.classList.add("task-viewer__due-date--muted");
+    DOM.taskViewerDueDateWrapper.classList.add("task-viewer__due-date--muted");
   }
 
-  taskViewerPriorityWrapper.classList.add(
+  DOM.taskViewerPriorityWrapper.classList.add(
     `task-viewer__priority--${taskObject.priority}`,
   );
 
-  taskViewer.showModal();
+  DOM.taskViewer.showModal();
 }
 
 function closeTaskViewer() {
-  taskViewer.close();
+  DOM.taskViewer.close();
 }
 
-createTaskButton.addEventListener("click", () => {
+DOM.createTaskButton.addEventListener("click", () => {
   openTaskSaver();
 });
 
-taskSaver.addEventListener("input", () => {
-  taskSaverAcceptButton.disabled = !taskSaver.checkValidity();
+DOM.taskSaver.addEventListener("input", () => {
+  DOM.taskSaverAcceptButton.disabled = !DOM.taskSaver.checkValidity();
 });
 
-taskSaverRejectButton.addEventListener("click", () => {
+DOM.taskSaverRejectButton.addEventListener("click", () => {
   closeTaskSaver();
 });
 
-taskSaver.addEventListener("submit", (event) => {
+DOM.taskSaver.addEventListener("submit", (event) => {
   event.preventDefault();
-  const taskID = taskSaver.dataset.taskId;
-  const taskSaverData = new FormData(taskSaver);
+  const taskID = DOM.taskSaver.dataset.taskId;
+  const taskSaverData = new FormData(DOM.taskSaver);
   const taskObject = new Task(
     undefined,
     taskSaverData.get("title"),
@@ -409,19 +410,19 @@ taskSaver.addEventListener("submit", (event) => {
   renderTasks();
 });
 
-tasksList.addEventListener("click", ({ target }) => {
+DOM.tasksList.addEventListener("click", ({ target }) => {
   if (target.classList.contains("task__button")) {
     activeTaskID = target.closest(".task").id;
   }
 });
 
-taskActionsMenu.addEventListener("click", ({ target }) => {
+DOM.taskActionsMenu.addEventListener("click", ({ target }) => {
   if (!target.classList.contains("task-actions-menu__button")) {
     return;
   }
 
   const taskOP = target.id.split("-")[0];
-  taskActionsMenu.hidePopover();
+  DOM.taskActionsMenu.hidePopover();
 
   if (taskOP === "read") {
     closeTaskSaver();
@@ -441,15 +442,15 @@ taskActionsMenu.addEventListener("click", ({ target }) => {
   }
 });
 
-taskViewerCloseButton.addEventListener("click", () => {
+DOM.taskViewerCloseButton.addEventListener("click", () => {
   closeTaskViewer();
 });
 
-taskRefiner.addEventListener("change", () => {
+DOM.taskRefiner.addEventListener("change", () => {
   renderTasks();
 });
 
-tasksList.addEventListener("click", async ({ target }) => {
+DOM.tasksList.addEventListener("click", async ({ target }) => {
   if (!target.classList.contains("task__status")) {
     return;
   }
@@ -462,12 +463,12 @@ tasksList.addEventListener("click", async ({ target }) => {
   renderTasks();
 });
 
-searchbar.addEventListener("input", ({ target }) => {
+DOM.searchbar.addEventListener("input", ({ target }) => {
   if (target.id === "searchbox") {
     renderTasks();
   }
 });
 
-searchbar.addEventListener("submit", (event) => {
+DOM.searchbar.addEventListener("submit", (event) => {
   event.preventDefault();
 });
