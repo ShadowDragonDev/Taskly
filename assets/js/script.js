@@ -19,6 +19,9 @@ const DOM = {
   taskRefinerButton: document.querySelector("#task-refiner-button"),
   searchbar: document.querySelector("#searchbar"),
   searchbox: document.querySelector("#searchbox"),
+  sidebar: document.querySelector("#sidebar"),
+  sidebarExpandButton: document.querySelector("#sidebar-expand-button"),
+  sidebarCollapseButton: document.querySelector("#sidebar-collapse-button"),
 };
 
 DOM.taskViewerDueDateWrapper = DOM.taskViewerDueDate.closest(
@@ -41,6 +44,8 @@ const PRIORITY_WEIGHTS = {
 };
 
 const tasks = [];
+const mobileMediaQuery = window.matchMedia("(width <= 768px)");
+
 let activeTaskID = "";
 
 class Task {
@@ -281,6 +286,25 @@ function sortPriority(a, b) {
   return priorityWeightB - priorityWeightA;
 }
 
+function updateSidebarFocusTrap(mediaQuery) {
+  const sidebarCollapsed = DOM.sidebar.classList.contains("sidebar--hidden");
+  DOM.sidebar.inert = sidebarCollapsed;
+
+  if (!mediaQuery.matches) {
+    setInert("body > :not(.sidebar)", false);
+    return;
+  }
+
+  setInert("body > :not(.sidebar)", !sidebarCollapsed);
+}
+
+function setInert(selector = ":not(*)", inert = false) {
+  const elements = document.querySelectorAll(selector) || [];
+  for (const element of elements) {
+    element.inert = inert;
+  }
+}
+
 function openTaskSaver(taskID = "") {
   DOM.taskSaver.reset();
   DOM.taskSaver.dataset.taskId = taskID;
@@ -367,6 +391,9 @@ function openTaskViewer(taskID = "") {
 function closeTaskViewer() {
   DOM.taskViewer.close();
 }
+
+mobileMediaQuery.addEventListener("change", updateSidebarFocusTrap);
+updateSidebarFocusTrap(mobileMediaQuery);
 
 DOM.createTaskButton.addEventListener("click", () => {
   openTaskSaver();
@@ -471,4 +498,22 @@ DOM.searchbar.addEventListener("input", ({ target }) => {
 
 DOM.searchbar.addEventListener("submit", (event) => {
   event.preventDefault();
+});
+
+DOM.sidebarExpandButton.addEventListener("click", () => {
+  DOM.sidebar.classList.remove("sidebar--hidden");
+  DOM.sidebarExpandButton.classList.add("site-header__sidebar-button--hidden");
+
+  updateSidebarFocusTrap(mobileMediaQuery);
+  DOM.sidebarCollapseButton.focus();
+});
+
+DOM.sidebarCollapseButton.addEventListener("click", () => {
+  DOM.sidebar.classList.add("sidebar--hidden");
+  DOM.sidebarExpandButton.classList.remove(
+    "site-header__sidebar-button--hidden",
+  );
+
+  updateSidebarFocusTrap(mobileMediaQuery);
+  DOM.sidebarExpandButton.focus();
 });
