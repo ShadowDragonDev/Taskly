@@ -294,7 +294,6 @@ mark {
 
 .searchbar:has(.searchbar__searchbox:read-only) {
   opacity: 0.5;
-  pointer-events: none;
 }
 
 .searchbar__icon {
