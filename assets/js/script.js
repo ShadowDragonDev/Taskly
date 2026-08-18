@@ -490,14 +490,12 @@ DOM.tasksList.addEventListener("click", async ({ target }) => {
   renderTasks();
 });
 
-DOM.searchbar.addEventListener("input", ({ target }) => {
-  if (target.id === "searchbox") {
-    renderTasks();
-  }
-});
-
 DOM.searchbar.addEventListener("submit", (event) => {
   event.preventDefault();
+});
+
+DOM.searchbox.addEventListener("input", () => {
+  renderTasks();
 });
 
 DOM.sidebarExpandButton.addEventListener("click", () => {
