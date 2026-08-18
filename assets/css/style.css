@@ -801,7 +801,7 @@ mark {
 }
 
 @media(width <=375px) {
-  .main {
+  .viewport {
     padding: 1rem 1.5rem;
   }
 }
