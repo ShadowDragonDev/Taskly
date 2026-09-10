@@ -213,6 +213,7 @@ mark {
   display: grid;
   grid-template-columns: 1.5rem 1fr;
   column-gap: 0.75rem;
+  align-items: center;
   padding: 0.5rem 0.75rem;
 }
 
