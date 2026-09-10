@@ -2,13 +2,26 @@ import { store } from "./core/store.js";
 import "./router.js";
 
 const DOM = {
+  documentRoot: document.documentElement,
   sidebar: document.querySelector("#sidebar"),
   sidebarExpandButton: document.querySelector("#sidebar-expand-button"),
   sidebarCollapseButton: document.querySelector("#sidebar-collapse-button"),
 };
 
 const mobileMediaQuery = window.matchMedia("(width <= 768px)");
-updateSidebarFocusTrap(mobileMediaQuery);
+
+function setTheme(theme) {
+  if (theme !== "system") {
+    DOM.documentRoot.dataset.theme = theme;
+    return;
+  }
+
+  const isSystemDark = window.matchMedia(
+    "(prefers-color-scheme: dark)",
+  ).matches;
+
+  DOM.documentRoot.dataset.theme = isSystemDark ? "dark" : "light";
+}
 
 function updateSidebarFocusTrap(mediaQuery) {
   const sidebarCollapsed = DOM.sidebar.classList.contains("sidebar--hidden");
@@ -29,6 +42,9 @@ function setInert(selector = ":not(*)", inert = false) {
   }
 }
 
+setTheme(store.getSettings().theme);
+updateSidebarFocusTrap(mobileMediaQuery);
+
 mobileMediaQuery.addEventListener("change", updateSidebarFocusTrap);
 
 store.addEventListener(
@@ -45,6 +61,10 @@ store.addEventListener(
     });
   },
 );
+
+store.addEventListener("store: settings-changed", ({ detail }) => {
+  setTheme(detail.theme);
+});
 
 DOM.sidebarExpandButton.addEventListener("click", () => {
   DOM.sidebar.classList.remove("sidebar--hidden");

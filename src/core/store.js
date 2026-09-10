@@ -12,6 +12,7 @@ class Store extends EventTarget {
 
   constructor() {
     super();
+    this.#loadState();
   }
 
   getPathname() {
@@ -21,6 +22,7 @@ class Store extends EventTarget {
   setPathname(pathname) {
     this.#state.pathname = pathname;
     this.#notify("store: pathname-changed", { pathname });
+    this.#saveState();
   }
 
   getSettings() {
@@ -29,6 +31,8 @@ class Store extends EventTarget {
 
   setSettings(settings) {
     this.#state.settings = { ...this.#state.settings, ...settings };
+    this.#notify("store: settings-changed", this.getSettings());
+    this.#saveState();
   }
 
   getTasks({ refined = false } = {}) {
@@ -113,6 +117,7 @@ class Store extends EventTarget {
     );
 
     this.#notify("store: tasks-changed", this.getTasks({ refined: true }));
+    this.#saveState();
   }
 
   updateTask(taskId, { status, title, description, dueDate, priority } = {}) {
@@ -121,6 +126,7 @@ class Store extends EventTarget {
     if (task) {
       task.update({ status, title, description, dueDate, priority });
       this.#notify("store: tasks-changed", this.getTasks({ refined: true }));
+      this.#saveState();
     }
   }
 
@@ -130,6 +136,7 @@ class Store extends EventTarget {
     if (taskIndex !== undefined) {
       this.#state.tasks.splice(taskIndex, 1);
       this.#notify("store: tasks-changed", this.getTasks({ refined: true }));
+      this.#saveState();
     }
   }
 
@@ -155,6 +162,7 @@ class Store extends EventTarget {
       "store: tasks-refinements-changed",
       this.getTasksRefinements(),
     );
+    this.#saveState();
   }
 
   #notify(message, data) {
@@ -165,6 +173,26 @@ class Store extends EventTarget {
         composed: true,
       }),
     );
+  }
+
+  #saveState() {
+    // eslint-disable-next-line no-unused-vars
+    const { pathname, ...persistentState } = this.#state;
+    const stateString = JSON.stringify(persistentState);
+    localStorage.setItem("state", stateString);
+  }
+
+  #loadState() {
+    const stateString = localStorage.getItem("state");
+
+    if (!stateString) {
+      return;
+    }
+
+    const persistentState = JSON.parse(stateString);
+    persistentState.tasks = persistentState.tasks.map((task) => new Task(task));
+
+    this.#state = persistentState;
   }
 }
 
