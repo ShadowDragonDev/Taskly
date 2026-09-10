@@ -11,16 +11,17 @@ const DOM = {
 const mobileMediaQuery = window.matchMedia("(width <= 768px)");
 
 function setTheme(theme) {
-  if (theme !== "system") {
-    DOM.documentRoot.dataset.theme = theme;
-    return;
+  if (theme === "system") {
+    const isSystemDark = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    ).matches;
+
+    theme = isSystemDark ? "dark" : "light";
   }
 
-  const isSystemDark = window.matchMedia(
-    "(prefers-color-scheme: dark)",
-  ).matches;
-
-  DOM.documentRoot.dataset.theme = isSystemDark ? "dark" : "light";
+  document.startViewTransition(() => {
+    DOM.documentRoot.setAttribute("data-theme", theme);
+  });
 }
 
 function updateSidebarFocusTrap(mediaQuery) {
