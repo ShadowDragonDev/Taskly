@@ -8,15 +8,14 @@ const DOM = {
   sidebarCollapseButton: document.querySelector("#sidebar-collapse-button"),
 };
 
+const preferDarkMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 const mobileMediaQuery = window.matchMedia("(width <= 768px)");
 
-function setTheme(theme) {
-  if (theme === "system") {
-    const isSystemDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
+function updateTheme() {
+  let theme = store.getSettings().theme;
 
-    theme = isSystemDark ? "dark" : "light";
+  if (theme === "system") {
+    theme = preferDarkMediaQuery.matches ? "dark" : "light";
   }
 
   document.startViewTransition(() => {
@@ -24,11 +23,11 @@ function setTheme(theme) {
   });
 }
 
-function updateSidebarFocusTrap(mediaQuery) {
+function updateSidebarFocusTrap() {
   const sidebarCollapsed = DOM.sidebar.classList.contains("sidebar--hidden");
   DOM.sidebar.inert = sidebarCollapsed;
 
-  if (!mediaQuery.matches) {
+  if (!mobileMediaQuery.matches) {
     setInert("body > :not(.sidebar)", false);
     return;
   }
@@ -43,9 +42,10 @@ function setInert(selector = ":not(*)", inert = false) {
   }
 }
 
-setTheme(store.getSettings().theme);
-updateSidebarFocusTrap(mobileMediaQuery);
+updateTheme();
+updateSidebarFocusTrap();
 
+preferDarkMediaQuery.addEventListener("change", updateTheme);
 mobileMediaQuery.addEventListener("change", updateSidebarFocusTrap);
 
 store.addEventListener(
@@ -64,7 +64,7 @@ store.addEventListener(
 );
 
 store.addEventListener("store: settings-changed", ({ detail }) => {
-  setTheme(detail.theme);
+  updateTheme(detail.theme);
 });
 
 DOM.sidebarExpandButton.addEventListener("click", () => {
@@ -73,7 +73,7 @@ DOM.sidebarExpandButton.addEventListener("click", () => {
     "site-header__sidebar-expand-button--hidden",
   );
 
-  updateSidebarFocusTrap(mobileMediaQuery);
+  updateSidebarFocusTrap();
   DOM.sidebarCollapseButton.focus();
 });
 
@@ -83,6 +83,6 @@ DOM.sidebarCollapseButton.addEventListener("click", () => {
     "site-header__sidebar-expand-button--hidden",
   );
 
-  updateSidebarFocusTrap(mobileMediaQuery);
+  updateSidebarFocusTrap();
   DOM.sidebarExpandButton.focus();
 });
