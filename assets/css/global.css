@@ -153,6 +153,14 @@ mark {
   pointer-events: none;
 }
 
+.static,
+.static *,
+.static *::before,
+.static *::after {
+  transition: none !important;
+  animation: none !important;
+}
+
 .sidebar {
   display: grid;
   grid-template-rows: auto 1fr;

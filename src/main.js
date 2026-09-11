@@ -19,7 +19,14 @@ function updateTheme() {
   }
 
   document.startViewTransition(() => {
+    document.body.classList.add("static");
     DOM.documentRoot.setAttribute("data-theme", theme);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.body.classList.remove("static");
+      });
+    });
   });
 }
 

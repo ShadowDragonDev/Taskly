@@ -69,6 +69,8 @@ function navigateTo(url) {
 }
 
 function router() {
+  document.body.classList.add("static");
+
   currentRoute.view.unmount();
   currentRoute = routes[getPathname()];
   store.setPathname(getPathname());
@@ -77,15 +79,20 @@ function router() {
   if (currentRoute.init) {
     currentRoute.init();
   }
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.body.classList.remove("static");
+    });
+  });
 }
 
 function getPathname() {
   return window.location.pathname;
 }
 
+window.addEventListener("DOMContentLoaded", router);
 window.addEventListener("popstate", router);
-
-document.addEventListener("DOMContentLoaded", router);
 
 document.addEventListener("click", (event) => {
   if (event.target.classList.contains("sidebar__tab-link")) {
