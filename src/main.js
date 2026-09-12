@@ -1,26 +1,24 @@
 import { store } from "./core/store.js";
 import "./router.js";
+import { getSystemTheme } from "./utilities/misc.js";
 
-const DOM = {
-  documentRoot: document.documentElement,
-  sidebar: document.querySelector("#sidebar"),
-  sidebarExpandButton: document.querySelector("#sidebar-expand-button"),
-  sidebarCollapseButton: document.querySelector("#sidebar-collapse-button"),
-};
+const documentRoot = document.documentElement;
+const sidebar = document.querySelector("#sidebar");
+const sidebarExpandButton = document.querySelector("#sidebar-expand-button");
+const sidebarCollapseButton = document.querySelector(
+  "#sidebar-collapse-button",
+);
 
-const preferDarkMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 const mobileMediaQuery = window.matchMedia("(width <= 768px)");
 
-function updateTheme() {
-  let theme = store.getSettings().theme;
-
+function updateTheme(theme) {
   if (theme === "system") {
-    theme = preferDarkMediaQuery.matches ? "dark" : "light";
+    theme = getSystemTheme();
   }
 
   document.startViewTransition(() => {
     document.body.classList.add("static");
-    DOM.documentRoot.setAttribute("data-theme", theme);
+    documentRoot.setAttribute("data-theme", theme);
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -31,8 +29,8 @@ function updateTheme() {
 }
 
 function updateSidebarFocusTrap() {
-  const sidebarCollapsed = DOM.sidebar.classList.contains("sidebar--hidden");
-  DOM.sidebar.inert = sidebarCollapsed;
+  const sidebarCollapsed = sidebar.classList.contains("sidebar--hidden");
+  sidebar.inert = sidebarCollapsed;
 
   if (!mobileMediaQuery.matches) {
     setInert("body > :not(.sidebar)", false);
@@ -49,16 +47,15 @@ function setInert(selector = ":not(*)", inert = false) {
   }
 }
 
-updateTheme();
+updateTheme(store.getSettings().theme);
 updateSidebarFocusTrap();
 
-preferDarkMediaQuery.addEventListener("change", updateTheme);
 mobileMediaQuery.addEventListener("change", updateSidebarFocusTrap);
 
 store.addEventListener(
   "store: pathname-changed",
   ({ detail: { pathname } }) => {
-    const sidebarTabs = DOM.sidebar.querySelectorAll(".sidebar__tab");
+    const sidebarTabs = sidebar.querySelectorAll(".sidebar__tab");
 
     sidebarTabs.forEach((sidebarTab) => {
       if (sidebarTab.querySelector(`[href="${pathname}"]`)) {
@@ -74,22 +71,22 @@ store.addEventListener("store: settings-changed", ({ detail }) => {
   updateTheme(detail.theme);
 });
 
-DOM.sidebarExpandButton.addEventListener("click", () => {
-  DOM.sidebar.classList.remove("sidebar--hidden");
-  DOM.sidebarExpandButton.classList.add(
+sidebarExpandButton.addEventListener("click", () => {
+  sidebar.classList.remove("sidebar--hidden");
+  sidebarExpandButton.classList.add(
     "site-header__sidebar-expand-button--hidden",
   );
 
   updateSidebarFocusTrap();
-  DOM.sidebarCollapseButton.focus();
+  sidebarCollapseButton.focus();
 });
 
-DOM.sidebarCollapseButton.addEventListener("click", () => {
-  DOM.sidebar.classList.add("sidebar--hidden");
-  DOM.sidebarExpandButton.classList.remove(
+sidebarCollapseButton.addEventListener("click", () => {
+  sidebar.classList.add("sidebar--hidden");
+  sidebarExpandButton.classList.remove(
     "site-header__sidebar-expand-button--hidden",
   );
 
   updateSidebarFocusTrap();
-  DOM.sidebarExpandButton.focus();
+  sidebarExpandButton.focus();
 });

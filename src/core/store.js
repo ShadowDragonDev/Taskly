@@ -13,6 +13,14 @@ class Store extends EventTarget {
   constructor() {
     super();
     this.#loadState();
+
+    this.preferDarkMediaQuery = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    );
+
+    this.preferDarkMediaQuery.addEventListener("change", () => {
+      this.#notify("store: settings-changed", this.getSettings());
+    });
   }
 
   getPathname() {
