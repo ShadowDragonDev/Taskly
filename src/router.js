@@ -71,6 +71,10 @@ function navigateTo(url) {
 function router() {
   document.body.classList.add("static");
 
+  if (!routes[getPathname()]) {
+    window.location.replace("/");
+  }
+
   currentRoute.view.unmount();
   currentRoute = routes[getPathname()];
   store.setPathname(getPathname());
