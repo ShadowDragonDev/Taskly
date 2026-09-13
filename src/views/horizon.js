@@ -1,4 +1,5 @@
 import globalStyleSheet from "../../assets/css/global.css" with { type: "css" };
+import "../components/empty-state.js";
 import "../components/searchbar.js";
 import "../components/task-actions-menu.js";
 import "../components/task-saver.js";
@@ -103,11 +104,11 @@ const template = createTemplate(
     </div>
 
     <tasks-list id="tasks-list"></tasks-list>
-
     <task-actions-menu popover id="task-actions-menu"></task-actions-menu>
 
-    <task-saver id="task-saver"></task-saver>
+    <empty-state id="empty-state"></empty-state>
 
+    <task-saver id="task-saver"></task-saver>
     <task-viewer id="task-viewer"></task-viewer>
 
     <button aria-label="Add task" id="create-task-button" class="create-task-button">
@@ -145,6 +146,8 @@ export class HorizonView {
     HorizonView.tasksList = HorizonView.#viewport.querySelector("#tasks-list");
     HorizonView.taskActionsMenu =
       HorizonView.#viewport.querySelector("#task-actions-menu");
+    HorizonView.emptyState =
+      HorizonView.#viewport.querySelector("#empty-state");
     HorizonView.createTaskButton = HorizonView.#viewport.querySelector(
       "#create-task-button",
     );
@@ -154,6 +157,7 @@ export class HorizonView {
 
     // View initialization
     HorizonView.viewportName.textContent = viewName;
+    updateEmptyState();
 
     const {
       tasksFilterData: { title, ...tasksFilters },
@@ -174,6 +178,47 @@ export class HorizonView {
     };
 
     // View life
+    function updateEmptyState() {
+      const tasks = store.getTasks();
+      const tasksRefined = store.getTasks({ refined: true });
+      const tasksRefinements = store.getTasksRefinements();
+
+      HorizonView.createTaskButton.hidden = !tasksRefined.length;
+
+      if (!HorizonView.taskSaver.hidden) {
+        HorizonView.emptyState.state = { reason: "" };
+        return;
+      }
+
+      HorizonView.emptyState.state = { reason: "no-tasks" };
+
+      if (!tasks.length) {
+        if (!localStorage.getItem("isWelcome")) {
+          HorizonView.emptyState.state = { reason: "welcome" };
+        }
+
+        return;
+      }
+
+      localStorage.setItem("isWelcome", "nah");
+
+      if (tasksRefined.length) {
+        HorizonView.emptyState.state = { reason: "" };
+        return;
+      }
+
+      if (tasksRefinements.tasksFilterData.title) {
+        HorizonView.emptyState.state = { reason: "no-tasks--search" };
+
+        return;
+      }
+
+      if (tasksRefinements.tasksFilterData.status === "complete") {
+        HorizonView.emptyState.state = { reason: "no-tasks--complete" };
+        return;
+      }
+    }
+
     function openTaskSaver(task = {}, taskItem) {
       HorizonView.searchbar.disabled = true;
       HorizonView.tasksRefinerMenuToggle.disabled = true;
@@ -196,6 +241,8 @@ export class HorizonView {
         dueDateStatusFilter:
           store.getTasksRefinements().tasksFilterData.dueDateStatus,
       };
+
+      updateEmptyState();
     }
 
     function closeTaskSaver() {
@@ -203,12 +250,15 @@ export class HorizonView {
       HorizonView.tasksRefinerMenuToggle.disabled = false;
       HorizonView.createTaskButton.disabled = false;
       HorizonView.tasksList.disabled = false;
+      updateEmptyState();
     }
 
     store.addEventListener(
       "store: tasks-changed",
-      () =>
-        (this.tasksList.state = { tasks: store.getTasks({ refined: true }) }),
+      () => {
+        this.tasksList.state = { tasks: store.getTasks({ refined: true }) };
+        updateEmptyState();
+      },
       { signal: this.#abortController.signal },
     );
 
@@ -223,6 +273,7 @@ export class HorizonView {
           tasks: store.getTasks({ refined: true }),
           search: title,
         };
+        updateEmptyState();
       },
       { signal: this.#abortController.signal },
     );
@@ -246,6 +297,7 @@ export class HorizonView {
       async ({ detail: { task } }) => {
         await sleep(200);
         store.updateTask(task.id, task);
+        updateEmptyState();
       },
       { signal: this.#abortController.signal },
     );
@@ -272,6 +324,10 @@ export class HorizonView {
     );
 
     HorizonView.createTaskButton.addEventListener("click", openTaskSaver, {
+      signal: this.#abortController.signal,
+    });
+
+    HorizonView.emptyState.addEventListener("task-saver: open", openTaskSaver, {
       signal: this.#abortController.signal,
     });
 

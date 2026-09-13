@@ -11,14 +11,17 @@ const sidebarCollapseButton = document.querySelector(
 
 const mobileMediaQuery = window.matchMedia("(width <= 768px)");
 
-function updateTheme(theme) {
+function updateTheme() {
+  const theme = store.getSettings().theme;
+  let explicitTheme;
+
   if (theme === "system") {
-    theme = getSystemTheme();
+    explicitTheme = getSystemTheme();
   }
 
   document.startViewTransition(() => {
     document.body.classList.add("static");
-    documentRoot.setAttribute("data-theme", theme);
+    documentRoot.setAttribute("data-theme", explicitTheme);
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -47,7 +50,7 @@ function setInert(selector = ":not(*)", inert = false) {
   }
 }
 
-updateTheme(store.getSettings().theme);
+updateTheme();
 updateSidebarFocusTrap();
 
 mobileMediaQuery.addEventListener("change", updateSidebarFocusTrap);
@@ -67,9 +70,7 @@ store.addEventListener(
   },
 );
 
-store.addEventListener("store: settings-changed", ({ detail }) => {
-  updateTheme(detail.theme);
-});
+store.addEventListener("store: settings-changed", updateTheme);
 
 sidebarExpandButton.addEventListener("click", () => {
   sidebar.classList.remove("sidebar--hidden");

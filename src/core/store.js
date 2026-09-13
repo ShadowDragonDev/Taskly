@@ -19,7 +19,7 @@ class Store extends EventTarget {
     );
 
     this.preferDarkMediaQuery.addEventListener("change", () => {
-      this.#notify("store: settings-changed", this.getSettings());
+      this.#notify("store: settings-changed");
     });
   }
 
