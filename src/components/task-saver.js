@@ -64,7 +64,12 @@ styleSheet.replaceSync(
 
   .task-saver__due-date,
   .task-saver__priority {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     flex: 1;
+    width: 100%;
+    min-width: 0;
     padding: 0.25rem 0.75rem;
     border: 2px solid var(--color-border);
     border-radius: 0.5rem;
