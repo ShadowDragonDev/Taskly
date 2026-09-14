@@ -168,7 +168,7 @@ class EmptyState extends HTMLElement {
     }
 
     if (this.#state.reason === "welcome") {
-      this.imageElement.src = `../../assets/images/empty-state-welcome-${this.#state.theme}.png`;
+      this.imageElement.src = `../../assets/images/empty-state-welcome-${this.#state.theme}.webp`;
       this.titleElement.textContent = "Ready to get things done?";
       this.messageElement.textContent =
         "This list is empty. Add a task to clear your mind and plan your day.";
@@ -177,7 +177,7 @@ class EmptyState extends HTMLElement {
     }
 
     if (this.#state.reason === "no-tasks") {
-      this.imageElement.src = `../../assets/images/empty-state-${this.#state.theme}.png`;
+      this.imageElement.src = `../../assets/images/empty-state-${this.#state.theme}.webp`;
       this.titleElement.textContent = "Clear slate, clear mind";
       this.messageElement.textContent =
         "Your list is completely empty. Create a task to start organizing your day.";
@@ -186,7 +186,7 @@ class EmptyState extends HTMLElement {
     }
 
     if (this.#state.reason === "no-tasks--complete") {
-      this.imageElement.src = `../../assets/images/empty-state-complete-${this.#state.theme}.png`;
+      this.imageElement.src = `../../assets/images/empty-state-complete-${this.#state.theme}.webp`;
       this.titleElement.textContent = "No checked boxes yet";
       this.messageElement.textContent =
         "You haven't finished any tasks today. Pick one from your list to get started!";
@@ -195,7 +195,7 @@ class EmptyState extends HTMLElement {
     }
 
     if (this.#state.reason === "no-tasks--search") {
-      this.imageElement.src = `../../assets/images/empty-state-search-${this.#state.theme}.png`;
+      this.imageElement.src = `../../assets/images/empty-state-search-${this.#state.theme}.webp`;
       this.titleElement.textContent = "We couldn't find a match";
       this.messageElement.textContent =
         "No tasks match your search. Try checking your spelling.";

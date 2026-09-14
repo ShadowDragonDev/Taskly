@@ -19,6 +19,19 @@ function updateTheme() {
     explicitTheme = getSystemTheme();
   }
 
+  if (document.hidden) {
+    document.body.classList.add("static");
+    documentRoot.setAttribute("data-theme", explicitTheme);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.body.classList.remove("static");
+      });
+    });
+
+    return;
+  }
+
   document.startViewTransition(() => {
     document.body.classList.add("static");
     documentRoot.setAttribute("data-theme", explicitTheme);
