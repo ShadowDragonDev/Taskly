@@ -13,7 +13,7 @@ const mobileMediaQuery = window.matchMedia("(width <= 768px)");
 
 function updateTheme() {
   const theme = store.getSettings().theme;
-  let explicitTheme;
+  let explicitTheme = theme;
 
   if (theme === "system") {
     explicitTheme = getSystemTheme();
