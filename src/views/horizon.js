@@ -1,4 +1,3 @@
-import globalStyleSheet from "../../assets/css/global.css" with { type: "css" };
 import "../components/empty-state.js";
 import "../components/searchbar.js";
 import "../components/task-actions-menu.js";
@@ -130,7 +129,7 @@ export class HorizonView {
     HorizonView.#abortController = new AbortController();
 
     // View foundation
-    document.adoptedStyleSheets = [globalStyleSheet, styleSheet];
+    document.adoptedStyleSheets = [styleSheet];
     HorizonView.#viewport.append(template.content.cloneNode(true));
 
     // DOM references

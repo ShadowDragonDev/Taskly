@@ -1,4 +1,3 @@
-import globalStyleSheet from "../../assets/css/global.css" with { type: "css" };
 import { store } from "../core/store.js";
 import { createTemplate } from "../utilities/misc.js";
 
@@ -83,7 +82,7 @@ export class SettingsView {
     SettingsView.#abortController = new AbortController();
 
     // View foundation
-    document.adoptedStyleSheets = [globalStyleSheet, styleSheet];
+    document.adoptedStyleSheets = [styleSheet];
     SettingsView.#viewport.append(template.content.cloneNode(true));
 
     // DOM references
