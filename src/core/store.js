@@ -91,9 +91,8 @@ class Store extends EventTarget {
           tasksFilterData.status === "both" ||
           task.status === tasksFilterData.status;
 
-        const matchesTitle = task.title
-          .toLowerCase()
-          .includes(tasksFilterData.title);
+        const titleRegex = new RegExp(tasksFilterData.title, "i");
+        const matchesTitle = titleRegex.test(task.title);
 
         const matchesDueDateStatus =
           !tasksFilterData.dueDateStatus ||
