@@ -83,7 +83,7 @@ store.addEventListener(
   },
 );
 
-store.addEventListener("store: settings-changed", updateTheme);
+store.addEventListener("store: settings-changed", () => updateTheme());
 
 sidebarExpandButton.addEventListener("click", () => {
   sidebar.classList.remove("sidebar--hidden");

@@ -61,7 +61,7 @@ const routes = {
   },
 };
 
-let currentRoute = routes[getPathname()];
+let currentRoute = routes[getPathname()] || "/";
 
 function navigateTo(url) {
   window.history.pushState(null, null, url);
@@ -95,7 +95,7 @@ function getPathname() {
   return window.location.pathname;
 }
 
-window.addEventListener("DOMContentLoaded", router);
+window.addEventListener("load", router);
 window.addEventListener("popstate", router);
 
 document.addEventListener("click", (event) => {
